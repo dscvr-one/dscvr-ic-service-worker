@@ -54,7 +54,7 @@
     "clean": "rm -fr dist dist-dev dist-prod coverage",
     "build": "rm -fr dist dist-prod && NODE_OPTIONS=--openssl-legacy-provider webpack && mv dist dist-prod",
     "build-dev": "rm -fr dist dist-dev && NODE_OPTIONS=--openssl-legacy-provider FORCE_FETCH_ROOT_KEY=1 webpack --mode development && mv dist dist-dev",
-    "start": "npm run build-dev && http-server dist-dev --proxy https://ic0.app/",
+    "start": "npm run build-dev && http-server dist-dev",
     "start-testnet": "npm run build-dev && http-server dist-dev --proxy https://identity.dfinity.network/",
     "lint": "npx eslint src",
     "lint:fix": "npx eslint --fix src",

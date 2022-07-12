@@ -28,6 +28,6 @@ window.addEventListener('load', async () => {
     // note: if the service worker was already installed, when the browser requested <domain>/, it would have
     // proxied the response from <domain>/<canister-id>/, so this bootstrap file would have never been
     // retrieved from the boundary nodes
-    await navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js')
   }
 });
