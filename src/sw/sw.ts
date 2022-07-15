@@ -4,6 +4,7 @@ declare const self: ServiceWorkerGlobalScope;
 
 const DEBUG = true;
 
+console.log("Loaded this file")
 // Always install updated SW immediately
 self.addEventListener('install', () => {
   console.log("Install");
