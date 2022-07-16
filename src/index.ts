@@ -24,10 +24,15 @@ window.addEventListener('load', async () => {
     console.log(
       'Installing a service worker to proxy and validate raw content into the browser...'
     );
+
+    if (!navigator.serviceWorker.controller) {
+      const registrations = await navigator.serviceWorker.getRegistrations()
+      await Promise.all(registrations.map(r => r.unregister()))
+    }
     // Ok, let's install the service worker...
     // note: if the service worker was already installed, when the browser requested <domain>/, it would have
     // proxied the response from <domain>/<canister-id>/, so this bootstrap file would have never been
     // retrieved from the boundary nodes
-    navigator.serviceWorker.register('./sw.js')
+    await navigator.serviceWorker.register('./sw.js');
   }
 });
