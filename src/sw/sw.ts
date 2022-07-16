@@ -4,7 +4,6 @@ declare const self: ServiceWorkerGlobalScope;
 
 const DEBUG = true;
 
-console.log("Loaded this file")
 // Always install updated SW immediately
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -17,7 +16,6 @@ self.addEventListener('activate', async () => {
   // reload all clients
   const clients = (await self.clients.matchAll()) as WindowClient[];
   clients.forEach((client) => client.navigate(client.url));
-  console.log("activate");
 });
 
 // Intercept and proxy all fetch requests made by the browser or DOM on this scope.
