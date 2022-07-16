@@ -22,10 +22,8 @@ self.addEventListener('activate', async () => {
 
 // Intercept and proxy all fetch requests made by the browser or DOM on this scope.
 self.addEventListener('fetch', (event: FetchEvent) => {
-  console.log("fetch", event);
   try {
     const response = handleRequest(event.request);
-    console.log(response);
     event.respondWith(response);
   } catch (e) {
     console.log('addEventListener exception', e)
