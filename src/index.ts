@@ -49,7 +49,7 @@ window.addEventListener('load', async () => {
       // page.
       setTimeout(function () {
         window.location.reload();
-      }, 800);
+      }, 2000);
     }
   }
 });
