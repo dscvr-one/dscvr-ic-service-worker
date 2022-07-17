@@ -33,6 +33,23 @@ window.addEventListener('load', async () => {
     // note: if the service worker was already installed, when the browser requested <domain>/, it would have
     // proxied the response from <domain>/<canister-id>/, so this bootstrap file would have never been
     // retrieved from the boundary nodes
-    await navigator.serviceWorker.register(location.protocol + '//' + location.host + '/sw.js');
+   const reg = await navigator.serviceWorker.register(location.protocol + '//' + location.host + '/sw.js');
+
+    if (reg.installing) {
+      const sw = reg.installing || reg.waiting;
+      sw.onstatechange = () => {
+        if (sw.state === 'installed') {
+          window.location.reload();
+        }
+      };
+    } else if (reg.active) {
+      // Hmmm we're not sure what's happening here. If the service worker was running, usually it
+      // would have obtained the underlying raw content from the canister, validated it, and proxied
+      // it to the browser. This might be either a disabled SW or the user did a hard reload on the
+      // page.
+      setTimeout(function () {
+        window.location.reload();
+      }, 800);
+    }
   }
 });
