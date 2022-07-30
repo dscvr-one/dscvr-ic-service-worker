@@ -21,22 +21,35 @@ window.addEventListener('load', async () => {
        Please try new web browser software.`
     );
   } else {
-  
     console.log(
       'Installing a service worker to proxy and validate raw content into the browser...'
     );
+
+    if (!navigator.serviceWorker.controller) {
+      const registrations = await navigator.serviceWorker.getRegistrations()
+      await Promise.all(registrations.map(r => r.unregister()))
+    }
     // Ok, let's install the service worker...
     // note: if the service worker was already installed, when the browser requested <domain>/, it would have
     // proxied the response from <domain>/<canister-id>/, so this bootstrap file would have never been
     // retrieved from the boundary nodes
-    await navigator.serviceWorker.register(location.protocol + '//' + location.host + '/sw.js')
-    
-    await navigator.serviceWorker.ready;
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (registration?.active && !navigator.serviceWorker.controller) {
-      // There's an active SW, but no controller for this tab. The service worker events are also _not_ fired.
-      // This happens after a hard refresh --> Perform a soft reload to load everything from the SW.
-      window.location.reload();
+   const reg = await navigator.serviceWorker.register(location.protocol + '//' + location.host + '/sw.js');
+   await navigator.serviceWorker.ready;
+    if (reg.installing) {
+      const sw = reg.installing || reg.waiting;
+      sw.onstatechange = () => {
+        if (sw.state === 'installed') {
+          window.location.reload();
+        }
+      };
+    } else if (reg.active) {
+      // Hmmm we're not sure what's happening here. If the service worker was running, usually it
+      // would have obtained the underlying raw content from the canister, validated it, and proxied
+      // it to the browser. This might be either a disabled SW or the user did a hard reload on the
+      // page.
+      setTimeout(function () {
+        window.location.reload();
+      }, 2000);
     }
   }
 });
